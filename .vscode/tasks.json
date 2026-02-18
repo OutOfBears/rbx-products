@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Release a new version",
+      "type": "shell",
+      "command": "make release ${input:versionId}",
+      "windows": {
+        "command": "make release ${input:versionId}"
+      }
+    },
+    {
+      "label": "Delete a release",
+      "type": "shell",
+      "command": "make delete-release ${input:versionId}",
+      "windows": {
+        "command": "make delete-release ${input:versionId}"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "versionId",
+      "description": "Input release version id",
+      "default": "v0.1.0"
+    }
+  ]
+}
