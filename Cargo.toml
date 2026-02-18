@@ -1,6 +1,6 @@
 [package]
 name = "rbx_products"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 authors = ["Jack Fox <jack@infernal.io>"]
 description = "A CLI tool for managing Roblox gamepasses and dev-products."
