@@ -97,7 +97,22 @@ impl Downloader {
                 } else {
                     product.price
                 },
+                regional_pricing: if let Some(existing_product) = existing {
+                    if overwrite {
+                        product.regional_pricing
+                    } else {
+                        existing_product.1.regional_pricing
+                    }
+                } else {
+                    product.regional_pricing
+                },
             };
+
+            if let Some(regional_pricing) = product.regional_pricing
+                && !regional_pricing
+            {
+                product.regional_pricing = None;
+            }
 
             if !overwrite && let Some(existing_product) = existing {
                 if let Some(desc) = product.description.clone()

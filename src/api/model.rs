@@ -27,6 +27,7 @@ nest! {
         pub store_page_enabled: bool,
         pub price_information: Option<pub struct ProductPriceInformation{
             pub default_price_in_robux: u64,
+            pub enabled_features: Option<Vec<String>>,
         }>,
         pub is_immutable: bool,
         pub created_timestamp: String,
@@ -47,6 +48,7 @@ nest! {
         pub updated_timestamp: String,
         pub price_information: Option<pub struct PriceInformation {
             pub default_price_in_robux: u64,
+            pub enabled_features: Option<Vec<String>>,
         }>,
     }
 }
@@ -72,7 +74,7 @@ impl From<&Product> for ProductUpdateRequest {
             description: p.description.clone(),
             is_for_sale: Some(p.active),
             price: Some(p.get_price() as u64),
-            is_regional_pricing_enabled: None,
+            is_regional_pricing_enabled: p.regional_pricing,
             store_page_enabled: None,
         }
     }
@@ -94,6 +96,11 @@ impl From<&DevProduct> for ProductUpdateRequest {
 
 impl From<&GamePass> for Product {
     fn from(gp: &GamePass) -> Self {
+        let features = gp
+            .price_information
+            .as_ref()
+            .map_or(None, |pi| pi.enabled_features.clone());
+
         Self {
             discount: None,
             prefix: None,
@@ -105,12 +112,18 @@ impl From<&GamePass> for Product {
                 .price_information
                 .as_ref()
                 .map_or(0, |pi| pi.default_price_in_robux as i64),
+            regional_pricing: features.map(|f| f.iter().any(|i| i == "RegionalPricing")),
         }
     }
 }
 
 impl From<&DevProduct> for Product {
     fn from(dp: &DevProduct) -> Self {
+        let features = dp
+            .price_information
+            .as_ref()
+            .map_or(None, |pi| pi.enabled_features.clone());
+
         Self {
             discount: None,
             prefix: None,
@@ -122,6 +135,7 @@ impl From<&DevProduct> for Product {
                 .price_information
                 .as_ref()
                 .map_or(0, |pi| pi.default_price_in_robux as i64),
+            regional_pricing: features.map(|f| f.iter().any(|i| i == "RegionalPricing")),
         }
     }
 }

@@ -29,11 +29,12 @@ nest! {
         pub gamepasses: HashMap<String, pub struct Product {
             pub id: Option<u64>,
             pub name: String,
+            pub prefix: Option<String>,
             pub description: Option<String>,
             pub active: bool,
             pub discount: Option<u8>,
             pub price: i64,
-            pub prefix: Option<String>,
+            pub regional_pricing: Option<bool>,
         }>,
 
         #[serde(default)]
@@ -230,6 +231,13 @@ impl Product {
             Description
         );
         check_diff!(diffs, Price, other.price as u64, price, Price);
+        check_diff!(
+            diffs,
+            RegionalPricing,
+            other.regional_pricing.unwrap_or(false),
+            self.regional_pricing.unwrap_or(false),
+            RegionalPricing
+        );
         check_diff!(diffs, Active, other.active, active, Active);
 
         let has_diffs = diffs.iter().any(|d| match d {
@@ -257,6 +265,10 @@ impl From<&Product> for toml_edit::Item {
             table["id"] = toml_edit::value(id as i64);
         }
 
+        if let Some(prefix) = &prod.prefix {
+            table["prefix"] = toml_edit::value(prefix.clone());
+        }
+
         table["name"] = toml_edit::value(&prod.name);
 
         if let Some(desc) = &prod.description {
@@ -270,6 +282,10 @@ impl From<&Product> for toml_edit::Item {
         }
 
         table["price"] = toml_edit::value(prod.price);
+
+        if let Some(regional_pricing) = prod.regional_pricing {
+            table["regional-pricing"] = toml_edit::value(regional_pricing);
+        }
 
         toml_edit::Item::Table(table)
     }

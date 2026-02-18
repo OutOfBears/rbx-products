@@ -5,12 +5,6 @@ use reqwest_middleware::{Middleware, Next, Result};
 use std::{sync::Arc, time::Duration};
 use tokio::sync::Mutex;
 
-#[derive(Debug, Default)]
-struct RateState {
-    remaining: Option<u64>,
-    reset_after_secs: Option<u64>, // seconds until reset
-}
-
 #[derive(Clone, Debug)]
 pub struct RobloxRateLimitMiddleware {
     max_429_retries: usize,

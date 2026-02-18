@@ -23,10 +23,13 @@ nest! {
         pub diffs: Vec<
             pub enum DiffChange {
                 Unchanged(pub enum ProductDiff {
+                    Prefix(String, String),
                     Title(String, String),
                     Description(String, String),
                     Price(u64, u64),
+                    RegionalPricing(bool, bool),
                     Active(bool, bool),
+
                 }),
                 Changed(ProductDiff),
                 Created(ProductDiff)
@@ -136,6 +139,7 @@ impl DiffViewer {
         for change in diff.1.diffs.iter() {
             match change {
                 DiffChange::Unchanged(pd) => match pd {
+                    ProductDiff::Prefix(_, _) => {}
                     ProductDiff::Title(old, new) => {
                         left_lines.push(Line::from(format!("  Title: {}", old)));
                         right_lines.push(Line::from(format!("  Title: {}", new)));
@@ -148,12 +152,17 @@ impl DiffViewer {
                         left_lines.push(Line::from(format!("  Price: {}", old)));
                         right_lines.push(Line::from(format!("  Price: {}", new)));
                     }
+                    ProductDiff::RegionalPricing(old, new) => {
+                        left_lines.push(Line::from(format!("  Regional Pricing: {}", old)));
+                        right_lines.push(Line::from(format!("  Regional Pricing: {}", new)));
+                    }
                     ProductDiff::Active(old, new) => {
                         left_lines.push(Line::from(format!("  Active: {}", old)));
                         right_lines.push(Line::from(format!("  Active: {}", new)));
                     }
                 },
                 DiffChange::Changed(pd) => match pd {
+                    ProductDiff::Prefix(_, _) => {}
                     ProductDiff::Title(old, new) => {
                         left_lines.push(
                             Line::from(format!("- Title: {}", old))
@@ -184,6 +193,16 @@ impl DiffViewer {
                                 .style(Style::default().fg(Color::Green)),
                         );
                     }
+                    ProductDiff::RegionalPricing(old, new) => {
+                        left_lines.push(
+                            Line::from(format!("- Regional Pricing: {}", old))
+                                .style(Style::default().fg(Color::Red)),
+                        );
+                        right_lines.push(
+                            Line::from(format!("+ Regional Pricing: {}", new))
+                                .style(Style::default().fg(Color::Green)),
+                        );
+                    }
                     ProductDiff::Active(old, new) => {
                         left_lines.push(
                             Line::from(format!("- Active: {}", old))
@@ -196,6 +215,7 @@ impl DiffViewer {
                     }
                 },
                 DiffChange::Created(pd) => match pd {
+                    ProductDiff::Prefix(_, _) => {}
                     ProductDiff::Title(_, new) => {
                         right_lines.push(
                             Line::from(format!("+ Title: {}", new))
@@ -211,6 +231,12 @@ impl DiffViewer {
                     ProductDiff::Price(_, new) => {
                         right_lines.push(
                             Line::from(format!("+ Price: {}", new))
+                                .style(Style::default().fg(Color::Green)),
+                        );
+                    }
+                    ProductDiff::RegionalPricing(_, new) => {
+                        right_lines.push(
+                            Line::from(format!("+ Regional Pricing: {}", new))
                                 .style(Style::default().fg(Color::Green)),
                         );
                     }
