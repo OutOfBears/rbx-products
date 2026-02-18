@@ -1,0 +1,22 @@
+{
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Format: Conventional Commit (feat:, fix:, chore:)."
+    },
+    {
+      "text": "Subject: Imperative verb. < 72 chars. Summarize core change."
+    },
+    {
+      "text": "Body (if needed, put AFTER one empty line): Use bullets (-) starting with a past tense verb (Added, Updated)."
+    },
+    {
+      "text": "Bullets: Describe the main outcome/purpose of changes. AVOID listing minor details (like every new property)."
+    },
+    {
+      "text": "Code terms: Use markdown backticks (`code`)."
+    },
+    {
+      "text": "NO EXPLANATIONS: Bullets state ONLY what changed. NO 'why' (like 'for consistency', 'to improve performance')."
+    }
+  ]
+}

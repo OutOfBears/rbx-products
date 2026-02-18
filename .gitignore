@@ -1,0 +1,5 @@
+/target
+.env
+
+products.toml
+products.luau
