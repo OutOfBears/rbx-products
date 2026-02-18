@@ -56,7 +56,7 @@ jobs:
         name: Build (${{ matrix.target }})
         runs-on: ${{ matrix.os }}
         env:
-            BIN: rbx-configs
+            BIN: rbx-products
         steps:
             - uses: actions/checkout@v4
               with:
