@@ -13,6 +13,8 @@ use crate::{
     ui::diffs::{DiffChange, ProductDiff, ProductDiffs},
 };
 
+type ProductKeyPair<'T> = (&'T String, &'T Product);
+
 nest! {
     #[derive(Default, Debug, Clone, Serialize, Deserialize)]*
     #[serde(rename_all = "kebab-case")]*
@@ -139,15 +141,16 @@ impl VCSProducts {
         let mut contents = String::new();
 
         let serialize = |contents: &mut String, products: &HashMap<String, Product>| {
-            let mut values: Vec<_> = products.values().collect();
-            values.sort_by(|a, b| a.id.cmp(&b.id));
+            let mut values: Vec<ProductKeyPair<'_>> = products.into_iter().collect();
+
+            values.sort_by(|a: &ProductKeyPair<'_>, b: &ProductKeyPair<'_>| a.1.id.cmp(&b.1.id));
 
             for (index, product) in values.iter().enumerate() {
                 *contents += &format!(
                     "\t\t[{:?}] = {{ id = {:?}, price = {} }}",
-                    product.get_title(),
-                    product.id.unwrap_or(0),
-                    product.get_price()
+                    product.0,
+                    product.1.id.unwrap_or(0),
+                    product.1.get_price()
                 );
 
                 if index != products.len() - 1 {
