@@ -45,11 +45,13 @@ pub async fn fetch_all_dev_products(universe_id: u64) -> Result<Vec<DevProduct>>
         }
 
         let resp: DevProductPage = req.send().await?.json().await?;
-        if resp.developer_products.is_empty() {
+        products.extend(resp.developer_products.clone());
+
+
+        if resp.developer_products.is_empty() || resp.developer_products.len() < page_size {
             break;
         }
 
-        products.extend(resp.developer_products);
 
         match resp.next_page_token {
             Some(cursor) => {
@@ -81,11 +83,11 @@ pub async fn fetch_all_gamepasses(universe_id: u64) -> Result<Vec<GamePass>> {
         }
 
         let resp: GamePassPage = req.send().await?.json().await?;
-        if resp.game_passes.is_empty() {
+        gamepasses.extend(resp.game_passes.clone());
+
+        if resp.game_passes.is_empty() || resp.game_passes.len() < page_size {
             break;
         }
-
-        gamepasses.extend(resp.game_passes);
 
         match resp.next_page_token {
             Some(cursor) => {
