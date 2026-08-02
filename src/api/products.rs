@@ -45,6 +45,9 @@ pub async fn fetch_all_dev_products(universe_id: u64) -> Result<Vec<DevProduct>>
         }
 
         let resp: DevProductPage = req.send().await?.json().await?;
+        if resp.developer_products.is_empty() {
+            break;
+        }
 
         products.extend(resp.developer_products);
 
@@ -78,6 +81,9 @@ pub async fn fetch_all_gamepasses(universe_id: u64) -> Result<Vec<GamePass>> {
         }
 
         let resp: GamePassPage = req.send().await?.json().await?;
+        if resp.game_passes.is_empty() {
+            break;
+        }
 
         gamepasses.extend(resp.game_passes);
 

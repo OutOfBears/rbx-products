@@ -27,26 +27,7 @@ fn apply_discount_prefix(product: &mut Product, prefix: Option<String>) {
 }
 
 impl Uploader {
-    fn has_empty_products(&self) -> bool {
-        let has_empty_gamepasses = self
-            .local_products
-            .gamepasses
-            .iter()
-            .any(|(_, gp)| gp.id.is_none());
-        let has_empty_devproducts = self
-            .local_products
-            .products
-            .iter()
-            .any(|(_, dp)| dp.id.is_none());
-
-        has_empty_gamepasses || has_empty_devproducts
-    }
-
     async fn upload_empty(&mut self, overwrite: bool) -> Result<()> {
-        if !self.has_empty_products() {
-            return Ok(());
-        }
-
         if !overwrite {
             let prompt_result =
                 ConfirmViewer::show_prompt("Would you like to upload non-existant products?").await;

@@ -1961,7 +1961,7 @@ dependencies = [
 
 [[package]]
 name = "rbx_products"
-version = "0.1.2"
+version = "0.1.4"
 dependencies = [
  "async-trait",
  "clap",
