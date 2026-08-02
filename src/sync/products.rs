@@ -167,6 +167,10 @@ impl VCSProducts {
 }
 
 impl Product {
+    pub fn is_created(&self) -> bool {
+        self.id.map(|id| id != 0).unwrap_or(false)
+    }
+
     pub fn has_discount(&self) -> bool {
         if let Some(discount) = self.discount
             && discount > 0

@@ -74,8 +74,9 @@ impl Uploader {
             universe_id
         );
 
+
         for (name, gamepass) in &self.local_products.gamepasses {
-            if gamepass.id.is_none() {
+            if !gamepass.is_created() {
                 let universe_id = universe_id.clone();
                 let name = name.clone();
                 let mut gamepass = gamepass.clone();
@@ -104,7 +105,7 @@ impl Uploader {
         }
 
         for (name, devproduct) in &self.local_products.products {
-            if devproduct.id.is_none() {
+            if !devproduct.is_created() {
                 let universe_id = universe_id.clone();
                 let name = name.clone();
                 let mut devproduct = devproduct.clone();
@@ -173,10 +174,10 @@ impl Uploader {
             all_local_products
                 .iter()
                 .filter_map(|local_product| {
-                    let id = match local_product.id {
-                        Some(id) => id,
-                        None => return None,
-                    };
+                    if !local_product.is_created() {
+                        return None;
+                    }
+                    let id = local_product.id.unwrap();
 
                     let (product_type, remote_product) =
                         match products.iter().find(|multi_product| match multi_product {
