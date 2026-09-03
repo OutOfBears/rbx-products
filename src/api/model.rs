@@ -24,7 +24,6 @@ nest! {
         pub description: String,
         pub universe_id: u64,
         pub is_for_sale: bool,
-        pub store_page_enabled: bool,
         pub price_information: Option<pub struct ProductPriceInformation{
             pub default_price_in_robux: u64,
             pub enabled_features: Option<Vec<String>>,
@@ -61,7 +60,6 @@ pub struct ProductUpdateRequest {
     pub is_for_sale: Option<bool>,
     pub price: Option<u64>,
     pub is_regional_pricing_enabled: Option<bool>,
-    pub store_page_enabled: Option<bool>,
 }
 
 paginate_struct!(DevProduct, DevProductPage, developer_products);
@@ -75,7 +73,6 @@ impl From<&Product> for ProductUpdateRequest {
             is_for_sale: Some(p.active),
             price: Some(p.get_price() as u64),
             is_regional_pricing_enabled: p.regional_pricing,
-            store_page_enabled: None,
         }
     }
 }
